@@ -3,76 +3,26 @@ from bs4 import BeautifulSoup
 import re
 import json
 import base64
-import os
-import csv
 
 class OtakudesuScraper:
     BASE_URL = "https://otakudesu.best"
     HEADERS = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Referer": "https://otakudesu.best/",
+        "Upgrade-Insecure-Requests": "1",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "same-origin",
+        "Sec-Fetch-User": "?1"
     }
 
     def __init__(self):
         self.session = requests.Session()
         self.session.headers.update(self.HEADERS)
-        self.local_index = self._load_index()
-
-    def _load_index(self):
-        index = {}
-        try:
-            index_path = os.path.join("data", "index.csv")
-            if os.path.exists(index_path):
-                with open(index_path, "r", newline='', encoding='utf-8') as f:
-                    reader = csv.DictReader(f)
-                    for row in reader:
-                        url = row.get('url')
-                        seq = row.get('seq')
-                        if url and seq:
-                            index[url] = seq
-            else:
-                print(f"{index_path} not found, falling back to live requests only.")
-        except Exception as e:
-            print(f"Error loading index: {e}")
-        return index
-
-    def _find_local_file(self, url):
-        # Strip query parameters for lookup if exact match fails
-        seq = self.local_index.get(url)
-
-        if not seq:
-             url_no_query = url.split('?')[0]
-             # This simple check is flawed if index keys have query params, but some might not.
-             # Actually, let's just trust the index keys.
-             # If exact match fails, we can try to iterate? No, too slow.
-             pass
-
-        if seq:
-            seq_padded = seq.zfill(5)
-
-            domain = url.split("://")[1].split("/")[0]
-            search_path = os.path.join("data", domain)
-
-            if os.path.exists(search_path):
-                for item in os.listdir(search_path):
-                    if item.startswith(seq_padded):
-                        dir_path = os.path.join(search_path, item)
-                        for file in os.listdir(dir_path):
-                            if file.startswith("04_res_body"):
-                                return os.path.join(dir_path, file)
-        return None
 
     def _get_soup(self, url):
-        # Try local first
-        local_file = self._find_local_file(url)
-        if local_file:
-            try:
-                with open(local_file, "r", encoding="utf-8", errors="ignore") as f:
-                    content = f.read()
-                return BeautifulSoup(content, "lxml")
-            except Exception as e:
-                print(f"Error reading local file {local_file}: {e}")
-
-        # Fallback to live
         try:
             response = self.session.get(url, timeout=10)
             response.raise_for_status()
