@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="mb-4">Genres</h2>
+<div class="row row-cols-2 row-cols-md-4 g-3">
+    {% for genre in genres %}
+    <div class="col">
+        <a href="{{ genre.url }}" class="btn btn-outline-light w-100 text-start text-truncate">
+            {{ genre.name }}
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

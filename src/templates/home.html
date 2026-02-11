@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="mb-3">On-Going Anime</h2>
+<div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4 mb-5">
+    {% for anime in ongoing %}
+    <div class="col">
+        <a href="/anime/{{ anime.slug }}">
+            <div class="card h-100">
+                <img src="{{ anime.image }}" class="card-img-top" alt="{{ anime.title }}" style="height: 300px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title text-truncate">{{ anime.title }}</h5>
+                    <p class="card-text small text-muted">{{ anime.episode }} - {{ anime.day }}</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+{% if complete %}
+<h2 class="mb-3">Complete Anime</h2>
+<div class="row row-cols-2 row-cols-md-4 row-cols-lg-5 g-4">
+    {% for anime in complete %}
+    <div class="col">
+        <a href="/anime/{{ anime.slug }}">
+            <div class="card h-100">
+                <img src="{{ anime.image }}" class="card-img-top" alt="{{ anime.title }}" style="height: 300px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title text-truncate">{{ anime.title }}</h5>
+                    <p class="card-text small text-muted">{{ anime.episode }}</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
