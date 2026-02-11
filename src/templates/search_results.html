@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="mb-4">Search Results for "{{ query }}"</h2>
+{% if results %}
+<div class="list-group">
+    {% for anime in results %}
+    <a href="/anime/{{ anime.slug }}" class="list-group-item list-group-item-action bg-dark text-light border-secondary">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ anime.title }}</h5>
+        </div>
+        <p class="mb-1">
+            {% for genre in anime.genres %}
+            <span class="badge bg-secondary">{{ genre }}</span>
+            {% endfor %}
+        </p>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<p>No results found.</p>
+{% endif %}
+{% endblock %}

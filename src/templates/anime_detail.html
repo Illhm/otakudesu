@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-3">
+        <img src="{{ anime.image }}" alt="{{ anime.title }}" class="img-fluid rounded">
+    </div>
+    <div class="col-md-9">
+        <h1>{{ anime.title }}</h1>
+        <hr>
+        <div class="mb-3">
+            <strong>Synopsis:</strong>
+            <p>{{ anime.synopsis }}</p>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Genre:</strong> {{ anime.genre }}</p>
+                <p><strong>Status:</strong> {{ anime.status }}</p>
+                <p><strong>Rating:</strong> {{ anime.skor }}</p>
+            </div>
+            <div class="col-md-6">
+                <p><strong>Studio:</strong> {{ anime.studio }}</p>
+                <p><strong>Duration:</strong> {{ anime.durasi }}</p>
+                <p><strong>Release:</strong> {{ anime.tanggal_rilis }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 class="mb-3">Episodes</h3>
+<div class="list-group">
+    {% for episode in anime.episodes %}
+    <a href="/episode/{{ episode.slug }}" class="list-group-item list-group-item-action bg-dark text-light border-secondary d-flex justify-content-between align-items-center">
+        {{ episode.title }}
+        <span class="badge bg-primary rounded-pill">{{ episode.date }}</span>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}
