@@ -1,0 +1,1 @@
+"""Anime streaming platform package."""
